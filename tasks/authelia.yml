@@ -1,0 +1,81 @@
+---
+
+# Copyright (c) 2023 Aleksandar Buza <aleksandar.buza@pledgelabs.io>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+- name: "Apply Authelia config directory"
+  become: true
+  file:
+    path: "{{ iceberg_authelia_config_dir_path }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: 0775
+    recurse: true
+  when:
+    - iceberg_authelia_enable|bool
+  tags:
+    - "iceberg"
+    - "iceberg-authelia"
+    - "iceberg-authelia-config"
+
+- name: "Apply Authelia config - {{ iceberg_authelia_config_path }}"
+  become: true
+  ansible.builtin.template:
+    src: "authelia_config.yml.j2"
+    dest: "{{ iceberg_authelia_config_path }}"
+    owner: "root"
+    group: "root"
+    mode: 0640
+  when:
+    - iceberg_authelia_enable|bool
+  tags:
+    - "iceberg"
+    - "iceberg-authelia"
+    - "iceberg-authelia-config"
+
+- name: "Apply Authelia users - {{ iceberg_authelia_config_users_path }}"
+  become: true
+  ansible.builtin.template:
+    src: "authelia_config_users.yml.j2"
+    dest: "{{ iceberg_authelia_config_users_path }}"
+    owner: "root"
+    group: "root"
+    mode: 0640
+  when:
+    - iceberg_authelia_enable|bool
+  tags:
+    - "iceberg"
+    - "iceberg-authelia"
+    - "iceberg-authelia-config"
+
+- name: "Apply Authelia Docker container"
+  become: true
+  community.docker.docker_container:
+    name: "{{ iceberg_authelia_docker_name }}"
+    image: "{{ iceberg_authelia_docker_image }}"
+    state: "{{ iceberg_authelia_docker_state }}"
+    recreate: "{{ iceberg_authelia_docker_recreate }}"
+    restart_policy: "{{ iceberg_authelia_docker_restart_policy }}"
+    command: "{{ iceberg_authelia_docker_command }}"
+    networks: "{{ iceberg_authelia_docker_networks | default(omit) }}"
+    volumes: "{{ iceberg_authelia_docker_volumes | default(omit) }}"
+    env: "{{ iceberg_authelia_docker_env | default(omit) }}"
+    labels: "{{ iceberg_authelia_docker_labels | default(omit) }}"
+  when:
+    - iceberg_authelia_enable|bool
+  tags:
+    - "iceberg"
+    - "iceberg-authelia"
+    - "iceberg-docker"

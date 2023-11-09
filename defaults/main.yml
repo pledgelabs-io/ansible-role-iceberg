@@ -1,0 +1,129 @@
+---
+
+# Copyright (c) 2023 Aleksandar Buza <aleksandar.buza@pledgelabs.io>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+iceberg_postgresql_enable: false
+iceberg_traefik_enable: false
+iceberg_authelia_enable: false
+iceberg_gitea_enable: false
+iceberg_portainer_enable: false
+iceberg_docker_enable: false
+
+###################################
+# ICEBERG - Docker configurations #
+###################################
+iceberg_docker_state: "present"
+iceberg_docker_private_network_name: "iceberg-private"
+iceberg_docker_public_network_name: "iceberg-public"
+
+#######################################
+# ICEBERG - PostgreSQL configurations #
+#######################################
+iceberg_postgresql_state: "present"
+
+iceberg_postgresql_authelia_db_name: "iceberg-authelia"
+iceberg_postgresql_authelia_db_state: "present"
+
+iceberg_postgresql_authelia_user_name: "iceberg-authelia"
+iceberg_postgresql_authelia_user_state: "present"
+iceberg_postgresql_authelia_user_db: "iceberg-authelia"
+iceberg_postgresql_authelia_user_password: ""
+iceberg_postgresql_authelia_user_priv: "ALL"
+
+iceberg_postgresql_gitea_db_name: "iceberg-gitea"
+iceberg_postgresql_gitea_db_state: "present"
+
+iceberg_postgresql_gitea_user_name: "iceberg-gitea"
+iceberg_postgresql_gitea_user_state: "present"
+iceberg_postgresql_gitea_user_db: "iceberg-gitea"
+iceberg_postgresql_gitea_user_password: ""
+iceberg_postgresql_gitea_user_priv: "ALL"
+
+###################################
+# ICEBERG - Traefik configuration #
+###################################
+iceberg_traefik_state: "present"
+
+iceberg_traefik_docker_name: "iceberg-traefik"
+iceberg_traefik_docker_image: "traefik:2.10.5"
+
+iceberg_traefik_docker_state: "started"
+iceberg_traefik_docker_recreate: true
+iceberg_traefik_docker_restart_policy: "always"
+
+iceberg_traefik_docker_ports: {}
+iceberg_traefik_docker_networks: {}
+iceberg_traefik_docker_volumes: {}
+iceberg_traefik_docker_command: {}
+iceberg_traefik_docker_env: {}
+iceberg_traefik_docker_labels: {}
+
+####################################
+# ICEBERG - Authelia configuration #
+####################################
+iceberg_authelia_state: "present"
+
+iceberg_authelia_docker_name: "iceberg-authelia"
+iceberg_authelia_docker_image: "authelia/authelia:4.37.5"
+
+iceberg_authelia_docker_state: "started"
+iceberg_authelia_docker_recreate: true
+iceberg_authelia_docker_restart_policy: "always"
+
+iceberg_authelia_docker_networks: {}
+iceberg_authelia_docker_volumes: {}
+iceberg_authelia_docker_command: "authelia --config={{ iceberg_authelia_config_path }}"
+iceberg_authelia_docker_env: {}
+iceberg_authelia_docker_labels: {}
+
+iceberg_authelia_config_dir_path: "/var/lib/iceberg/authelia/config"
+iceberg_authelia_config_path: "/var/lib/iceberg/authelia/config/config.yml"
+iceberg_authelia_config_users_path: "/var/lib/iceberg/authelia/config/users.yml"
+
+iceberg_authelia_config: {}
+iceberg_authelia_config_users: {}
+
+#################################
+# ICEBERG - Gitea configuration #
+#################################
+iceberg_gitea_state: "present"
+
+iceberg_gitea_docker_name: "iceberg-gitea"
+iceberg_gitea_docker_image: "gitea/gitea:1.20.5"
+
+iceberg_gitea_docker_state: "started"
+iceberg_gitea_docker_recreate: true
+iceberg_gitea_docker_restart_policy: "always"
+
+iceberg_gitea_docker_networks: {}
+iceberg_gitea_docker_volumes: {}
+iceberg_gitea_docker_env: {}
+iceberg_gitea_docker_labels: {}
+
+iceberg_gitea_config_dir_path: "/var/lib/iceberg/gitea/conf"
+iceberg_gitea_config_path: "/var/lib/iceberg/gitea/conf/app.ini"
+
+iceberg_gitea_config_ini: {}
+iceberg_gitea_config_ini_server: {}
+iceberg_gitea_config_ini_database: {}
+iceberg_gitea_config_ini_security: {}
+iceberg_gitea_config_ini_service: {}
+iceberg_gitea_config_ini_session: {}
+iceberg_gitea_config_ini_log: {}
+iceberg_gitea_config_ini_repository: {}
+iceberg_gitea_config_ini_repository_local: {}
+iceberg_gitea_config_ini_repository_uploads: {}
+iceberg_gitea_config_ini_lfs: {}
+iceberg_gitea_config_ini_picture: {}

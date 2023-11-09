@@ -1,0 +1,14 @@
+# Visual Code
+.vscode/
+
+# Ansible
+*.retry
+
+# Python poetry
+poetry.lock
+
+# Temporary files
+tmp/
+
+# Workspaces
+workspace/

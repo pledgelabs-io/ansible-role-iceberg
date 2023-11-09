@@ -1,0 +1,51 @@
+---
+
+# Copyright (c) 2023 Aleksandar Buza <aleksandar.buza@pledgelabs.io>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+- name: Include Docker tasks
+  ansible.builtin.include_tasks:
+    file: docker.yml
+  when:
+    - iceberg_docker_enable|bool
+
+- name: Include PostgreSQL tasks
+  ansible.builtin.include_tasks:
+    file: postgresql.yml
+  when:
+    - iceberg_postgresql_enable|bool
+
+- name: Include Traefik tasks
+  ansible.builtin.include_tasks:
+    file: traefik.yml
+  when:
+    - iceberg_traefik_enable|bool
+
+- name: Include Authelia tasks
+  ansible.builtin.include_tasks:
+    file: authelia.yml
+  when:
+    - iceberg_authelia_enable|bool
+
+- name: Include Portainer tasks
+  ansible.builtin.include_tasks:
+    file: portainer.yml
+  when:
+    - iceberg_portainer_enable|bool
+
+- name: Include Gitea tasks
+  ansible.builtin.include_tasks:
+    file: gitea.yml
+  when:
+    - iceberg_gitea_enable|bool

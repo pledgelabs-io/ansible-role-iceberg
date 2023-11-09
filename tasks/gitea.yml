@@ -1,0 +1,229 @@
+---
+
+# Copyright (c) 2023 Aleksandar Buza <aleksandar.buza@pledgelabs.io>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+- name: "Apply Gitea config directory"
+  become: true
+  file:
+    path: "{{ iceberg_gitea_config_dir_path }}"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: 0775
+    recurse: true
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea INI config"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: null
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_global }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - server"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: server
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_server }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - security"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: security
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_security }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - database"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "database"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_database }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - repository"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "repository"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_repository }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - repository.local"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "repository.local"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_repository_local }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - repository.uploads"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "repository.uploads"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_repository_uploads }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - service"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "service"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_service }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - lfs"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "lfs"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_lfs }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - picture"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "picture"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_picture }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - logs"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "log"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_log }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea config INI - session"
+  become: true
+  community.general.ini_file:
+    path: "{{ iceberg_gitea_config_path }}"
+    section: "session"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    backup: false
+  with_dict:
+    - "{{ iceberg_gitea_config_ini_session }}"
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-config"
+
+- name: "Apply Gitea docker container"
+  become: true
+  community.docker.docker_container:
+    name: "{{ iceberg_gitea_docker_name }}"
+    image: "{{ iceberg_gitea_docker_image }}"
+    state: "{{ iceberg_gitea_docker_state }}"
+    recreate: "{{ iceberg_gitea_docker_recreate }}"
+    restart_policy: "{{ iceberg_gitea_docker_restart_policy }}"
+    command: "{{ iceberg_gitea_docker_command | default(omit) }}"
+    networks: "{{ iceberg_gitea_docker_networks | default(omit) }}"
+    volumes: "{{ iceberg_gitea_docker_volumes | default(omit) }}"
+    env: "{{ iceberg_gitea_docker_env | default(omit) }}"
+    labels: "{{ iceberg_gitea_docker_labels | default(omit) }}"
+  when:
+    - iceberg_gitea_enable|bool
+  tags:
+    - "iceberg"
+    - "iceberg-gitea"
+    - "iceberg-gitea-docker"

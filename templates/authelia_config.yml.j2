@@ -1,0 +1,9 @@
+---
+
+# {{ ansible_managed }}
+
+{% for item in iceberg_authelia_config %}
+{% for key, value in item.items() %}
+{{key}}: {{value}}
+{% endfor %}
+{% endfor %}

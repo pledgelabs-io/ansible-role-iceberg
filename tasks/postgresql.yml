@@ -1,0 +1,142 @@
+---
+
+# Copyright (c) 2023 Aleksandar Buza <aleksandar.buza@pledgelabs.io>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+- name: "Apply PostgreSQL APT repository"
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main"
+    state: "present"
+    filename: "pgdg"
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Apply PostgreSQL APT repository GPG key"
+  become: true
+  ansible.builtin.apt_key:
+    url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+    state: "present"
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Install PostgreSQL server"
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    name: 
+    - "postgresql-16"
+    - "python3-psycopg2"
+    - "acl"
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Apply PostgreSQL DB - Authelia"
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_db:
+    name: "{{ iceberg_postgresql_authelia_db_name }}"
+    state: "{{ iceberg_postgresql_authelia_db_state }}"
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Apply PostgreSQL DB - Gitea"
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_db:
+    name: "{{ iceberg_postgresql_gitea_db_name }}"
+    state: "{{ iceberg_postgresql_gitea_db_state }}"
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Apply PostgreSQL User - Authelia"
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_user:
+    state: "{{ iceberg_postgresql_authelia_user_state }}"
+    name: "{{ iceberg_postgresql_authelia_user_name }}"
+    password: "{{ iceberg_postgresql_authelia_user_password }}"
+    db: "{{ iceberg_postgresql_authelia_db_name }}"
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Apply PostgreSQL User privileges - Authelia - GRANT ALL PRIVILEGES ON SCHEMA public TO {{ iceberg_postgresql_authelia_user_name }}"
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_privs:
+    database: "{{ iceberg_postgresql_authelia_db_name }}"
+    state: "{{ iceberg_postgresql_authelia_user_state }}"
+    privs: "ALL"
+    type: "schema"
+    objs: "public"
+    role: "{{ iceberg_postgresql_authelia_user_name }}"
+    grant_option: true
+
+- name: "Apply PostgreSQL User - Gitea"
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_user:
+    state: "{{ iceberg_postgresql_gitea_user_state }}"
+    name: "{{ iceberg_postgresql_gitea_user_name }}"
+    password: "{{ iceberg_postgresql_gitea_user_password }}"
+    db: "{{ iceberg_postgresql_gitea_db_name }}"
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Apply PostgreSQL User privileges - Gitea - GRANT ALL PRIVILEGES ON SCHEMA public TO {{ iceberg_postgresql_gitea_user_name }}"
+  become: true
+  become_user: "postgres"
+  community.postgresql.postgresql_privs:
+    database: "{{ iceberg_postgresql_gitea_db_name }}"
+    state: "{{ iceberg_postgresql_gitea_user_state }}"
+    privs: "ALL"
+    type: "schema"
+    objs: "public"
+    role: "{{ iceberg_postgresql_gitea_user_name }}"
+    grant_option: true
+
+- name: "Apply PostgreSQL HBA - Grant Authelia user to access from Docker interface"
+  become: true
+  community.postgresql.postgresql_pg_hba:
+    dest: "/etc/postgresql/16/main/pg_hba.conf"
+    contype: "host"
+    users: "{{ iceberg_postgresql_authelia_user_name }}"
+    source: "0.0.0.0/0"
+    databases: "{{ iceberg_postgresql_authelia_user_db }}"
+    method: "md5"
+    create: true
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"
+
+- name: "Apply PostgreSQL HBA - Grant Gitea user to access from Docker interface"
+  become: true
+  community.postgresql.postgresql_pg_hba:
+    dest: "/etc/postgresql/16/main/pg_hba.conf"
+    contype: "host"
+    users: "{{ iceberg_postgresql_gitea_user_name }}"
+    source: "0.0.0.0/0"
+    databases: "{{ iceberg_postgresql_gitea_user_db }}"
+    method: "md5"
+    create: true
+  tags:
+    - "iceberg"
+    - "iceberg-postgresql"

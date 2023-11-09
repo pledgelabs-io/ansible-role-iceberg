@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "ansible-role-iceberg"
+version = "0.0.1"
+description = "Ansible role for ICEBERG Solution"
+authors = ["Aleksandar Buza <aleksandar.buza@pledgelabs.io>"]
+license = "ISC"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+ansible = "^8.6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
